@@ -39,7 +39,7 @@ $sessions = mysqli_query($conn, $query);
                     <td><?php echo $session['time']; ?></td>
                     <td><?php echo $session['commission_members']; ?></td>
                     <td>
-                        <a href="add_remove_students.php?session_id=<?php echo $session['id']; ?>">Manage Students</a>
+                        <a href="add_remove_student.php?session_id=<?php echo $session['id']; ?>">Manage Students</a>
                         <a href="update_scores.php?session_id=<?php echo $session['id']; ?>">Update Scores</a>
                     </td>
                 </tr>

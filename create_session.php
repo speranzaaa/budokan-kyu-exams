@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $query = "INSERT INTO sessions (date, time, commission_members) VALUES ('$date', '$time', '$commission_members')";
     mysqli_query($conn, $query);
-    header('Location: view_sessions.php');
+    header('Location: view_session.php');
     exit();
 }
 ?>
