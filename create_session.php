@@ -8,6 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $atleti = [];
+$tuttiAtleti = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $date = $_POST['date'];
@@ -30,6 +31,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     usort($atleti, function($a, $b) {
         return strcmp($a['Cognome'], $b['Cognome']);
     });
+
+    //prendo gli atleti
+
+    $query = "SELECT * FROM atleti";
+    $result = mysqli_query($conn, $query);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $tuttiAtleti[] = $row;
+    }
+
+    // Ordina gli atleti per cognome
+    usort($tuttiAtleti, function($a, $b) {
+        return strcmp($a['Cognome'], $b['Cognome']);
+    });
 }
 ?>
 
@@ -38,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Create Session</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <?php include('templates/header.php'); ?>
@@ -65,11 +79,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
         <button type="submit">Create</button>
     </form>
-    <div id="atleti_list">
+    <div>
         <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
             <h2>Athletes List</h2>
+            <button id="addNewAthlete" type="submit">Aggiungi un atleta</button>
+            <select id="searchAthlete">
+                <?php foreach($tuttiAtleti as $atl): ?>
+                    <option value='<?php echo $atl['PresenzeNumero'] ?>'><?php echo $atl['Nome'] . ' ' . $atl['Cognome'] ?></option>
+                <?php endforeach; ?>
+            </select>
             <?php if (count($atleti) > 0): ?>
-                <ul>
+                <ul id="atleti_list">
                     <?php foreach ($atleti as $atleta): ?>
                         <li><?php echo $atleta['Nome'] . ' ' . $atleta['Cognome'] . ' - ' . $atleta['Grado'] . ' - ' . $atleta['Presenze']; ?></li>
                     <?php endforeach; ?>
