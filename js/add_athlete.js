@@ -3,9 +3,7 @@ const atletiList = document.getElementById('atleti_list');
 
 const addNewAthlete = document.getElementById("addNewAthlete");
 addNewAthlete.addEventListener('click', function(e) {
-    const listItem = document.createElement('li');
-    listItem.textContent = "ciao";
-    atletiList.appendChild(listItem);
+
 
     const select = document.getElementById("searchAthlete");
     const selectedOption = select.options[select.selectedIndex];
@@ -17,7 +15,11 @@ addNewAthlete.addEventListener('click', function(e) {
         .then(response => {
         console.log(response.data);
         if(!response.data["error"]){
-            console.log("ok");
+            console.log(response.data["athlete"])
+            const listItem = document.createElement('li');
+            const athlete = response.data["athlete"];
+            listItem.textContent = athlete["Nome"] + " " + athlete["Cognome"];
+            atletiList.appendChild(listItem);
         }
     })
 
