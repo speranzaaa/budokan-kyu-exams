@@ -10,9 +10,16 @@ addNewAthlete.addEventListener('click', function(e) {
     const select = document.getElementById("searchAthlete");
     const selectedOption = select.options[select.selectedIndex];
     const selectedOptionId = selectedOption.value;
-    console.log(selectedOptionId);
 
-    axios.post()
+    const formData = new FormData();
+    formData.append("id", selectedOptionId);
+    axios.post('api/api-add-athlete.php', formData)
+        .then(response => {
+        console.log(response.data);
+        if(!response.data["error"]){
+            console.log("ok");
+        }
+    })
 
 });
 
