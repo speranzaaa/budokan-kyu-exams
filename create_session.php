@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button id="addNewAthlete" type="submit">Aggiungi un atleta</button>
             <select id="searchAthlete">
                 <?php foreach($tuttiAtleti as $atl): ?>
-                    <option value='<?php echo $atl['PresenzeNumero'] ?>'><?php echo $atl['Nome'] . ' ' . $atl['Cognome'] ?></option>
+                    <option value='<?php echo $atl['Id'] ?>'><?php echo $atl['Nome'] . ' ' . $atl['Cognome'] ?></option>
                 <?php endforeach; ?>
             </select>
             <?php if (count($atleti) > 0): ?>
