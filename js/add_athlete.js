@@ -6,10 +6,14 @@ addNewAthlete.addEventListener('click', function(e) {
     const listItem = document.createElement('li');
     listItem.textContent = "ciao";
     atletiList.appendChild(listItem);
-    console.log("ciao");
+
+    const select = document.getElementById("searchAthlete");
+    const selectedOption = select.options[select.selectedIndex];
+    const selectedOptionId = selectedOption.value;
+    console.log(selectedOptionId);
+
+    axios.post()
+
 });
 
-const s1 = document.getElementById("grado");
-console.log(s1.textContent);
-const select = document.getElementById("searchAthlete");
 
