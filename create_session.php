@@ -8,6 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $atleti = [];
+$tuttiAtleti = [];
 $session_id = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -27,6 +28,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     while ($row = mysqli_fetch_assoc($result)) {
         $atleti[] = $row;
     }
+    // Ordina gli atleti per cognome
+    usort($tuttiAtleti, function($a, $b) {
+        return strcmp($a['Cognome'], $b['Cognome']);
+    });
+
+    //prendo gli atleti
+    $query = "SELECT * FROM atleti";
+    $result = mysqli_query($conn, $query);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $tuttiAtleti[] = $row;
+    }
 
     // Ordina gli atleti per cognome
     usort($atleti, function($a, $b) {
@@ -39,9 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Creazione Sessione</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
 <body>
     <?php include('templates/header.php'); ?>
     <h2>Creazione Sessione</h2>
@@ -68,23 +77,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit">Vedi atleti</button>
     </form>
     <div>
-        <?php if ($session_id): ?>
-            <h2>Lista degli atleti</h2>
-            <form action="update_scores.php" method="post">
-                <input type="hidden" name="session_id" value="<?php echo $session_id; ?>">
-                <?php foreach ($atleti as $atleta): ?>
-                    <input type="hidden" name="atleti_ids[]" value="<?php echo $atleta['Id']; ?>">
+        <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
+            <h2>Athletes List</h2>
+            <button id="addNewAthlete" type="button">Aggiungi un atleta</button>
+            <select id="searchAthlete">
+                <?php foreach($tuttiAtleti as $atl): ?>
+                    <option value='<?php echo $atl['Id'] ?>'><?php echo $atl['Nome'] . ' ' . $atl['Cognome'] ?></option>
                 <?php endforeach; ?>
-                <button type="submit">Procedi</button>
+            </select>
+            <?php if (count($atleti) > 0): ?>
                 <ul id="atleti_list">
                     <?php foreach ($atleti as $atleta): ?>
                         <li><?php echo $atleta['Nome'] . ' ' . $atleta['Cognome'] . ' - ' . $atleta['Grado'] . ' - ' . $atleta['Presenze']; ?></li>
-                        <!-- si può togliere grado e presenze -->
                     <?php endforeach; ?>
                 </ul>
-            </form>
-        <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
-            <p>Nessun atleta corrisponde ai criteri di ricerca.</p>
+                <form id="update-scores-form" action="update_scores.php" method="post">
+                    <input type="hidden" name="session_id" value="<?php echo $session_id; ?>">
+                    <?php foreach ($atleti as $atleta): ?>
+                        <input type="hidden" name="atleti_ids[]" value="<?php echo $atleta['Id']; ?>">
+                    <?php endforeach; ?>
+                    <button type="submit">Aggiorna voti</button>
+                </form>
+            <?php else: ?>
+                <p>Nessun atleta corrisponde ai criteri di ricerca.</p>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
     <?php include('templates/footer.php'); ?>
