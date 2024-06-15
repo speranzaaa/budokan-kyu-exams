@@ -20,6 +20,13 @@ addNewAthlete.addEventListener('click', function(e) {
             const athlete = response.data["athlete"];
             listItem.textContent = athlete["Nome"] + " " + athlete["Cognome"];
             atletiList.appendChild(listItem);
+
+            const form = document.getElementById("update-scores-form");
+            const hiddenInput = document.createElement('input');
+            hiddenInput.value = athlete["Id"];
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "atleti_ids[]");
+            form.appendChild(hiddenInput);
         }
     })
 
