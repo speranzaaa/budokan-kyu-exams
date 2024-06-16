@@ -28,6 +28,12 @@ if (isset($session_id)) {
 
             //$dbh->addToExamTable($id, $session_id, $kihon_score, $kata_score, $kumite_score, $average_score, $status);
 
+        } else {
+            // Gestione dello stato 'Absent'
+            $query2 = "INSERT INTO `esami`(`id_studente`, `session_id`, `kihon_score`, `kata_score`, `kumite_score`, `average`, `esito`) 
+            VALUES ('$id', '$session_id', NULL, NULL, NULL, NULL, 'Absent')";
+            
+            mysqli_query($conn, $query2);
         }
     }
 }
