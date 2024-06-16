@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </form>
     <div>
         <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
-            <h2>Athletes List</h2>
+            <h2>Elenco degli Atleti</h2>
             <button id="addNewAthlete" type="button">Aggiungi un atleta</button>
             <select id="searchAthlete">
                 <?php foreach($tuttiAtleti as $atl): ?>
@@ -94,6 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </ul>
                 <form id="update-scores-form" action="update_scores.php" method="post">
                     <input type="hidden" name="session_id" value="<?php echo $session_id; ?>">
+                    <input type="hidden" name="date" value="<?php echo $date; ?>">
+                    <input type="hidden" name="time" value="<?php echo $time; ?>">
+                    <input type="hidden" name="commission_members" value="<?php echo $commission_members; ?>">
                     <?php foreach ($atleti as $atleta): ?>
                         <input type="hidden" name="atleti_ids[]" value="<?php echo $atleta['Id']; ?>">
                     <?php endforeach; ?>

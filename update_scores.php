@@ -9,10 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $atleti_data = [];
 
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $session_id = $_POST['session_id'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
+    $commission_members = $_POST['commission_members'];
     $atleti_ids = $_POST['atleti_ids'];
     
     $query = "SELECT * FROM atleti WHERE Id IN (" . implode(',', array_map('intval', $atleti_ids)) . ")";
@@ -110,6 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <?php include('templates/header.php'); ?>
     <h2>Update Scores</h2>
+    <p>Data: <?php echo $date; ?></p>
+    <p>Ora: <?php echo $time; ?></p>
+    <p>Commissione: <?php echo nl2br($commission_members); ?></p>
     <?php if (!empty($atleti_data)): ?>
         <form method="post" oninput="calculateAverage();" action="api/api-insert-exam.php">
             <input type="hidden" name="session_id" value="<?php echo $session_id; ?>">
