@@ -9,34 +9,16 @@ if (!isset($_SESSION['user_id'])) {
 
 $atleti_data = [];
 
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $session_id = $_POST['session_id'];
     $atleti_ids = $_POST['atleti_ids'];
-
+    
     $query = "SELECT * FROM atleti WHERE Id IN (" . implode(',', array_map('intval', $atleti_ids)) . ")";
     $result = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($result)) {
         $atleti_data[] = $row;
-    }
-
-    if (isset($_POST['id']) && isset($_POST['exam_status'])) {
-        foreach ($_POST['id'] as $index => $id) {
-            $status = $_POST['exam_status'][$index];
-
-            if ($status !== 'Absent') {
-                $kihon_score = $_POST['kihon_score'][$index];
-                $kata_score = $_POST['kata_score'][$index];
-                $kumite_score = $_POST['kumite_score'][$index];
-
-                $average_score = ($kihon_score + $kata_score + $kumite_score) / 3;
-
-                $query = "UPDATE atleti SET Kihon_Score = '$kihon_score', Kata_Score = '$kata_score', Kumite_Score = '$kumite_score', Average_Score = '$average_score', Exam_Status = '$status' WHERE Id = '$id'";
-                mysqli_query($conn, $query);
-            } else {
-                $query = "UPDATE atleti SET Exam_Status = '$status' WHERE Id = '$id'";
-                mysqli_query($conn, $query);
-            }
-        }
     }
 }
 ?>
@@ -129,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php include('templates/header.php'); ?>
     <h2>Update Scores</h2>
     <?php if (!empty($atleti_data)): ?>
-        <form method="post" oninput="calculateAverage()">
+        <form method="post" oninput="calculateAverage();" action="api/api-insert-exam.php">
             <input type="hidden" name="session_id" value="<?php echo $session_id; ?>">
             <table>
                 <thead>
@@ -166,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <button type="submit">Update Scores</button>
+            <input type="submit" value="Inserisci Voti"></input>
         </form>
     <?php else: ?>
         <p>No athletes found.</p>
