@@ -44,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     usort($atleti, function($a, $b) {
         return strcmp($a['Cognome'], $b['Cognome']);
     });
+
+    $query1 = "INSERT INTO `esami`(`id_studente`, `session_id`, `kihon_score`, `kata_score`, `kumite_score`, `average`, `esito`) 
+    VALUES ('4', '133', '1', '1', '3', '3.6', 'ok')";
+    
+    mysqli_query($conn, $query1);
 }
 ?>
 
@@ -97,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php foreach ($atleti as $atleta): ?>
                         <input type="hidden" name="atleti_ids[]" value="<?php echo $atleta['Id']; ?>">
                     <?php endforeach; ?>
-                    <button type="submit">Aggiorna voti</button>
+                    <input type="submit" value="Aggiorna voti"></input>
                 </form>
             <?php else: ?>
                 <p>Nessun atleta corrisponde ai criteri di ricerca.</p>
