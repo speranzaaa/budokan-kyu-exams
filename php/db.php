@@ -33,6 +33,14 @@ class DatabaseManager {
         return $result->fetch_all(MYSQLI_ASSOC)[0];
     }
 
+    public function addToExamTable($idAtl, $idSess, $v1, $v2, $v3, $v4, $v5){
+        $stmt = $this->db->prepare("INSERT INTO `esami` (`id_studente`, `session_id`, `kihon_score`, `kata_score`, `kumite_score`, `average`, `esito`) 
+                VALUES ('?', '?', '?', '?', '?', '?', '?')");
+        $stmt->bind_param("sssssss", $idAtl, $idSess, $v1, $v2, $v3, $v4, $v5);
+        $result = $stmt->execute();
+        return $result;
+    }
+
 
 
 }
