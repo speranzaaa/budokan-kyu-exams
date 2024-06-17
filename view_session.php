@@ -7,22 +7,17 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$session_id = $_GET['session_id'] ?? null;
-$grado = $_GET['grado'] ?? null;
+if ($_SERVER['REQUEST_METHOD'] == "GET"){
+    $query = "SELECT * FROM `sessions`";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        die("Query Failed: " . mysqli_error($conn));
+    }
 
-if (!$session_id || !$grado) {
-    die('Invalid session or grade');
-}
-
-$query = "SELECT * FROM sessions WHERE id = $session_id";
-$result = mysqli_query($conn, $query);
-$session = mysqli_fetch_assoc($result);
-
-$query = "SELECT * FROM atleti WHERE grado = '$grado' AND (presenze = 'Sufficienti' OR presenze = 'Appena sufficienti')";
-$result = mysqli_query($conn, $query);
-$atleti = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $atleti[] = $row;
+    $sessioni = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $sessioni[] = $row;
+    }
 }
 ?>
 
@@ -31,24 +26,22 @@ while ($row = mysqli_fetch_assoc($result)) {
 <head>
     <meta charset="UTF-8">
     <title>View Session</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <?php include('templates/header.php'); ?>
-    <h2>Session Details</h2>
-    <p>Date: <?php echo $session['date']; ?></p>
-    <p>Time: <?php echo $session['time']; ?></p>
-    <p>Commission Members: <?php echo $session['commission_members']; ?></p>
-
-    <h2>Athletes List</h2>
-    <?php if (count($atleti) > 0): ?>
+    <h2>Sessioni d'esame</h2>
+    <?php if (count($sessioni) > 0): ?>
         <ul>
-            <?php foreach ($atleti as $atleta): ?>
-                <li><?php echo $atleta['nome'] . ' - ' . $atleta['grado'] . ' - ' . $atleta['presenze']; ?></li>
+            <?php foreach ($sessioni as $sessione): ?>
+                <form action="session_details.php" method="POST" >
+                <input type="hidden" name="id" value="<?php echo $sessione['id']; ?>">
+                <li><?php echo $sessione['id'] . ' - ' . $sessione['date'] . ' - ' . $sessione['time'] . ' - ' . $sessione['commission_members']; ?> <button type="submit">Vedi sessione</button></li>
+                </form>
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <p>No athletes found for the selected grade.</p>
+        <p>Non sono state trovate sessioni.</p>
     <?php endif; ?>
     <?php include('templates/footer.php'); ?>
 </body>
