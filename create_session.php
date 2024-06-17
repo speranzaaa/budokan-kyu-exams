@@ -28,12 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     while ($row = mysqli_fetch_assoc($result)) {
         $atleti[] = $row;
     }
-    // Ordina gli atleti per cognome
-    usort($tuttiAtleti, function($a, $b) {
-        return strcmp($a['Cognome'], $b['Cognome']);
-    });
 
-    //prendo gli atleti
+    // Recupera tutti gli atleti
     $query = "SELECT * FROM atleti";
     $result = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($result)) {
@@ -44,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     usort($atleti, function($a, $b) {
         return strcmp($a['Cognome'], $b['Cognome']);
     });
+    usort($tuttiAtleti, function($a, $b) {
+        return strcmp($a['Cognome'], $b['Cognome']);
+    });
 }
 ?>
 
@@ -52,6 +51,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hidden { display: none; }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchAthlete = document.getElementById('searchAthlete');
+            const atletiList = document.getElementById('atleti_list');
+            const hiddenAtletiInput = document.getElementById('hidden_atleti_ids');
+
+            searchInput.addEventListener('input', function() {
+                const filter = searchInput.value.toLowerCase();
+                const options = searchAthlete.options;
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    const text = option.textContent.toLowerCase();
+                    option.classList.toggle('hidden', !text.includes(filter));
+                }
+            });
+
+            searchAthlete.addEventListener('change', function() {
+                const selectedOption = searchAthlete.selectedOptions[0];
+                const id = selectedOption.value;
+                const text = selectedOption.textContent;
+                const li = document.createElement('li');
+                li.dataset.id = id;
+                li.innerHTML = `${text} <button type="button" class="remove-btn">Rimuovi</button>`;
+                atletiList.appendChild(li);
+                selectedOption.disabled = true;
+                updateHiddenInput();
+            });
+
+            atletiList.addEventListener('click', function(event) {
+                if (event.target.classList.contains('remove-btn')) {
+                    const li = event.target.closest('li');
+                    const id = li.dataset.id;
+                    li.remove();
+                    const option = searchAthlete.querySelector(`option[value="${id}"]`);
+                    if (option) option.disabled = false;
+                    updateHiddenInput();
+                }
+            });
+
+            function updateHiddenInput() {
+                const selectedIds = Array.from(atletiList.children).map(li => li.dataset.id);
+                hiddenAtletiInput.value = selectedIds.join(',');
+            }
+        });
+    </script>
+</head>
 <body>
     <?php include('templates/header.php'); ?>
     <h2>Creazione Sessione</h2>
@@ -80,8 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div>
         <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
             <h2>Elenco degli Atleti</h2>
-            <button id="addNewAthlete" type="button">Aggiungi un atleta</button>
-            <select id="searchAthlete">
+            <input type="text" id="searchInput" placeholder="Cerca atleti...">
+            <select id="searchAthlete" size="10">
                 <?php foreach($tuttiAtleti as $atl): ?>
                     <option value='<?php echo $atl['Id'] ?>'><?php echo $atl['Nome'] . ' ' . $atl['Cognome'] ?></option>
                 <?php endforeach; ?>
@@ -89,7 +138,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php if (count($atleti) > 0): ?>
                 <ul id="atleti_list">
                     <?php foreach ($atleti as $atleta): ?>
-                        <li><?php echo $atleta['Nome'] . ' ' . $atleta['Cognome'] . ' - ' . $atleta['Grado'] . ' - ' . $atleta['Presenze']; ?></li>
+                        <li data-id="<?php echo $atleta['Id']; ?>"><?php echo $atleta['Nome'] . ' ' . $atleta['Cognome'] . ' - ' . $atleta['Grado'] . ' - ' . $atleta['Presenze']; ?>
+                            <button type="button" class="remove-btn">Rimuovi</button>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
                 <form id="update-scores-form" action="update_scores.php" method="post">
@@ -97,9 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="hidden" name="date" value="<?php echo $date; ?>">
                     <input type="hidden" name="time" value="<?php echo $time; ?>">
                     <input type="hidden" name="commission_members" value="<?php echo $commission_members; ?>">
-                    <?php foreach ($atleti as $atleta): ?>
-                        <input type="hidden" name="atleti_ids[]" value="<?php echo $atleta['Id']; ?>">
-                    <?php endforeach; ?>
+                    <input type="hidden" id="hidden_atleti_ids" name="atleti_ids" value="">
                     <input type="submit" value="Aggiorna voti"></input>
                 </form>
             <?php else: ?>
