@@ -18,7 +18,6 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
         $sessioni[] = $row;
         
     }
-    echo $sessioni[0]['Nome'];
 }
 
 ?>
@@ -29,13 +28,58 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     <meta charset="UTF-8">
     <title>Dettagli esame</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <?php include('templates/header.php'); ?>
-    <section>
+    <section id="print">
         <h1>Dettagli esame</h1>
-        <?php echo $id; ?>
+        <table id="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Punteggio Kihon</th>
+                <th>Punteggio Kata</th>
+                <th>Punteggio Kumite</th>
+                <th>Media</th>
+                <th>Esito</th>
+                <th>Membri della Commissione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($sessioni as $key ): ?>
+            <tr>
+                <td><?php echo $key['Nome']; ?></td>
+                <td><?php echo $key['Cognome']; ?></td>
+                <td><?php echo $key['kihon_score']; ?></td>
+                <td><?php echo $key['kata_score']; ?></td>
+                <td><?php echo $key['kumite_score']; ?></td>
+                <td><?php echo $key['average']; ?></td>
+                <td><?php echo $key['esito']; ?></td>
+                <td><?php echo $key['commission_members']; ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <button id="btn" type="button">Stampa</button>
     </section>
     <?php include('templates/footer.php'); ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/printPdf.js"></script>
 </body>
 </html>
