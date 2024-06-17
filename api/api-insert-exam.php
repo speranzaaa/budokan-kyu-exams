@@ -38,4 +38,4 @@ if (isset($session_id)) {
     }
 }
 
-//header('Location: ../create_session.php');
+header('Location: ../create_session.php');
