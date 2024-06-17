@@ -1,7 +1,24 @@
 <?php
+include('php/db.php');
+session_start();
 
 if($_SERVER['REQUEST_METHOD']=="POST"){
-    echo $_POST['id'];
+    $id = $_POST["id"];
+    $query = "SELECT atleti.Nome, atleti.Cognome, esami.kihon_score, esami.kata_score, esami.kumite_score, esami.average, 
+    esami.esito, sessions.commission_members 
+    FROM esami, atleti, sessions 
+    WHERE esami.id_studente = atleti.Id and esami.session_id = sessions.id and esami.session_id='$id';";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        die("Query Failed: " . mysqli_error($conn));
+    }
+
+    $sessioni = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $sessioni[] = $row;
+        
+    }
+    echo $sessioni[0]['Nome'];
 }
 
 ?>
