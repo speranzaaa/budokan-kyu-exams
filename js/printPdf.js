@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     tableWidth: 100,
                 },
                 1: {
+                    halign: 'left',
                     tableWidth: 100,
                 },
                 2: {
