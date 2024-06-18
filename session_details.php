@@ -28,7 +28,6 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     <meta charset="UTF-8">
     <title>Dettagli esame</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
         table {
             width: 100%;
