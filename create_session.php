@@ -52,57 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <style>
-        .hidden { display: none; }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const searchAthlete = document.getElementById('searchAthlete');
-            const atletiList = document.getElementById('atleti_list');
-            const hiddenAtletiInput = document.getElementById('hidden_atleti_ids');
-
-            searchInput.addEventListener('input', function() {
-                const filter = searchInput.value.toLowerCase();
-                const options = searchAthlete.options;
-                for (let i = 0; i < options.length; i++) {
-                    const option = options[i];
-                    const text = option.textContent.toLowerCase();
-                    option.classList.toggle('hidden', !text.includes(filter));
-                }
-            });
-
-            searchAthlete.addEventListener('change', function() {
-                const selectedOption = searchAthlete.selectedOptions[0];
-                const id = selectedOption.value;
-                const text = selectedOption.textContent;
-                const li = document.createElement('li');
-                li.dataset.id = id;
-                li.innerHTML = `${text} <button type="button" class="remove-btn">Rimuovi</button>`;
-                atletiList.appendChild(li);
-                selectedOption.disabled = true;
-                updateHiddenInput();
-            });
-
-            atletiList.addEventListener('click', function(event) {
-                if (event.target.classList.contains('remove-btn')) {
-                    const li = event.target.closest('li');
-                    const id = li.dataset.id;
-                    li.remove();
-                    const option = searchAthlete.querySelector(`option[value="${id}"]`);
-                    if (option) option.disabled = false;
-                    updateHiddenInput();
-                }
-            });
-
-            function updateHiddenInput() {
-                const selectedIds = Array.from(atletiList.children).map(li => li.dataset.id);
-                hiddenAtletiInput.value = selectedIds.join(',');
-            }
-        });
-    </script>
-</head>
 <body>
     <?php include('templates/header.php'); ?>
     <h1>Creazione Sessione</h1>
