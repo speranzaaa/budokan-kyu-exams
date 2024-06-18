@@ -103,8 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <?php include('templates/header.php'); ?>
-    <h1>Creazione Sessione</h1>
-    <div id="sessionId">
+    <h2>Creazione Sessione</h2>
     <form id="create-session-form" method="post">
         <label for="date">Data:</label>
         <input type="date" id="date" name="date" required>
@@ -127,7 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
         <button type="submit">Vedi atleti</button>
     </form>
-    </div>
     <div>
         <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
             <h2>Elenco degli Atleti</h2>
