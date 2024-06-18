@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $date = $_POST['date'];
     $time = $_POST['time'];
     $commission_members = $_POST['commission_members'];
-    $atleti_ids = explode(',', $_POST['atleti_ids']);  // Corrected line
-
+    $atleti_ids = $_POST['atleti_ids'];
+    
     $query = "SELECT * FROM atleti WHERE Id IN (" . implode(',', array_map('intval', $atleti_ids)) . ")";
     $result = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($result)) {
