@@ -28,12 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     while ($row = mysqli_fetch_assoc($result)) {
         $atleti[] = $row;
     }
-    // Ordina gli atleti per cognome
-    usort($tuttiAtleti, function($a, $b) {
-        return strcmp($a['Cognome'], $b['Cognome']);
-    });
 
-    //prendo gli atleti
+    // Recupera tutti gli atleti
     $query = "SELECT * FROM atleti";
     $result = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($result)) {
@@ -42,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Ordina gli atleti per cognome
     usort($atleti, function($a, $b) {
+        return strcmp($a['Cognome'], $b['Cognome']);
+    });
+    usort($tuttiAtleti, function($a, $b) {
         return strcmp($a['Cognome'], $b['Cognome']);
     });
 }
@@ -133,8 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div>
         <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
             <h2>Elenco degli Atleti</h2>
-            <button id="addNewAthlete" type="button">Aggiungi un atleta</button>
-            <select id="searchAthlete">
+            <input type="text" id="searchInput" placeholder="Cerca atleti...">
+            <select id="searchAthlete" size="10">
                 <?php foreach($tuttiAtleti as $atl): ?>
                     <option value='<?php echo $atl['Id'] ?>'><?php echo $atl['Nome'] . ' ' . $atl['Cognome'] ?></option>
                 <?php endforeach; ?>
@@ -142,7 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php if (count($atleti) > 0): ?>
                 <ul id="atleti_list">
                     <?php foreach ($atleti as $atleta): ?>
-                        <li><?php echo $atleta['Nome'] . ' ' . $atleta['Cognome'] . ' - ' . $atleta['Grado'] . ' - ' . $atleta['Presenze']; ?></li>
+                        <li data-id="<?php echo $atleta['Id']; ?>"><?php echo $atleta['Nome'] . ' ' . $atleta['Cognome'] . ' - ' . $atleta['Grado'] . ' - ' . $atleta['Presenze']; ?>
+                            <button type="button" class="remove-btn">Rimuovi</button>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
                 <form id="update-scores-form" action="update_scores.php" method="post">
@@ -150,9 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="hidden" name="date" value="<?php echo $date; ?>">
                     <input type="hidden" name="time" value="<?php echo $time; ?>">
                     <input type="hidden" name="commission_members" value="<?php echo $commission_members; ?>">
-                    <?php foreach ($atleti as $atleta): ?>
-                        <input type="hidden" name="atleti_ids[]" value="<?php echo $atleta['Id']; ?>">
-                    <?php endforeach; ?>
+                    <input type="hidden" id="hidden_atleti_ids" name="atleti_ids" value="">
                     <input type="submit" value="Aggiorna voti"></input>
                 </form>
             <?php else: ?>
