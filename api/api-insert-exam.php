@@ -12,11 +12,11 @@ if (isset($session_id)) {
         $status = $_POST['exam_status'][$index];
 
         if ($status !== 'Absent') {
-            $kihon_score = $_POST['kihon_score'][$index];
-            $kata_score = $_POST['kata_score'][$index];
-            $kumite_score = $_POST['kumite_score'][$index];
-
-            $average_score = ($kihon_score + $kata_score + $kumite_score) / 3;
+            $kihon_score = intval($_POST['kihon_score'][$index]);
+            $kata_score = intval($_POST['kata_score'][$index]);
+            $kumite_score = intval($_POST['kumite_score'][$index]);
+            
+            $average_score = ($kihon_score + $kata_score + $kumite_score) / 3;            
 
             echo $id. ' '. $session_id . ' '.$kihon_score. ' ' .$kata_score.' '.$kumite_score.' '.$average_score.' '.$status;
             
